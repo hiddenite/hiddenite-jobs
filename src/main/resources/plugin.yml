@@ -1,0 +1,9 @@
+main: eu.hiddenite.jobs.JobsPlugin
+name: HiddeniteJobs
+version: 1.0.0
+api-version: 1.16
+author: Hiddenite
+commands:
+  jobs:
+    description: "Open the jobs."
+    usage: "/<command>"

@@ -1,0 +1,26 @@
+mysql:
+  host: "127.0.0.1"
+  user: "root"
+  password: ""
+  database: "my_server"
+
+messages:
+  levelup: "§bYou are now level §a{LEVEL}§b in {JOB}§b."
+
+menu:
+  title: "Jobs"
+  job-lore-short: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp points\n§7Click for details"
+  job-lore-long: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp points\n§a{TOTAL_EXP}§b total exp"
+
+woodcutting:
+  name: "§2Woodcutting§r"
+  icon: "OAK_SAPLING"
+  skills:
+    gatherer:
+      name: "§2Gatherer"
+      icon: "OAK_LOG"
+      description: "§a{BONUS}%§b chance to double your logs.\n§bIncreases with your level."
+    careful:
+      name: "§2Careful"
+      icon: "IRON_AXE"
+      description: "§bYour axes break §a{BONUS}%§b slower.\n§bIncreases with your level."

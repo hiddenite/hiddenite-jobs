@@ -44,6 +44,7 @@ public class JobsPlugin extends JavaPlugin {
         jobsMenuManager = new JobsMenuManager(this);
 
         new WoodcuttingManager(this);
+        new MiningManager(this);
     }
 
     @Override

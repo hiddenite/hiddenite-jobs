@@ -2,7 +2,9 @@ package eu.hiddenite.jobs;
 
 import eu.hiddenite.jobs.skills.CarefulSkill;
 import eu.hiddenite.jobs.skills.GathererSkill;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,39 +51,63 @@ public class JobsMenuManager implements Listener {
     public void openMenu(Player player) {
         InventoryMenu menu = new InventoryMenu();
         menu.player = player;
-        menu.inventory = plugin.getServer().createInventory(player, 54, plugin.formatComponent("menu.title"));
+        menu.inventory = plugin.getServer().createInventory(player, 36, plugin.formatComponent("menu.title"));
 
-        openMainPage(menu);
+        drawEntirePage(menu, null);
 
         player.openInventory(menu.inventory);
         openMenus.put(menu.inventory, menu);
     }
 
-    public void openMainPage(InventoryMenu menu) {
-        menu.selectedJob = null;
-        menu.inventory.clear();
-
-        ItemStack woodcutting = createJobItem(menu.player, "woodcutting", true);
-        menu.inventory.setItem(10, woodcutting);
-    }
-
-    public void openJobPage(InventoryMenu menu, String jobType) {
+    private void drawEntirePage(InventoryMenu menu, String jobType) {
         menu.selectedJob = jobType;
         menu.inventory.clear();
 
-        if (jobType.equals("woodcutting")) {
-            ItemStack woodcutting = createJobItem(menu.player, "woodcutting", false);
-            menu.inventory.setItem(4, woodcutting);
+        drawJobs(menu);
+        drawSkills(menu);
 
-            ItemStack gatherer = createSkillItem(menu.player, "woodcutting", "gatherer");
-            menu.inventory.setItem(19, gatherer);
+        fillEmptySpace(menu);
+    }
 
-            ItemStack careful = createSkillItem(menu.player, "woodcutting", "careful");
-            menu.inventory.setItem(20, careful);
+    private void drawJobs(InventoryMenu menu) {
+        ItemStack woodcutting = createJobItem(menu.player, WoodcuttingManager.JOB_TYPE, WoodcuttingManager.JOB_TYPE.equals(menu.selectedJob));
+        menu.inventory.setItem(0, woodcutting);
+
+        ItemStack mining = createJobItem(menu.player, MiningManager.JOB_TYPE, MiningManager.JOB_TYPE.equals(menu.selectedJob));
+        menu.inventory.setItem(1, mining);
+    }
+
+    private void drawSkills(InventoryMenu menu) {
+        if (menu.selectedJob == null) {
+            return;
+        }
+
+        switch (menu.selectedJob) {
+            case WoodcuttingManager.JOB_TYPE:
+            case MiningManager.JOB_TYPE:
+                ItemStack gatherer = createSkillItem(menu.player, menu.selectedJob, "gatherer");
+                menu.inventory.setItem(19, gatherer);
+
+                ItemStack careful = createSkillItem(menu.player, menu.selectedJob, "careful");
+                menu.inventory.setItem(20, careful);
+                break;
         }
     }
 
-    private ItemStack createJobItem(Player player, String jobType, boolean shortDescription) {
+    private void fillEmptySpace(InventoryMenu menu) {
+        ItemStack emptyItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta meta = emptyItem.getItemMeta();
+        meta.displayName(Component.empty());
+        emptyItem.setItemMeta(meta);
+
+        for (int i = 0; i < menu.inventory.getSize(); ++i) {
+            if (menu.inventory.getItem(i) == null) {
+                menu.inventory.setItem(i, emptyItem.clone());
+            }
+        }
+    }
+
+    private ItemStack createJobItem(Player player, String jobType, boolean isSelected) {
         long exp = plugin.getExperienceManager().getPlayerExperience(player, jobType);
         int level = ExperienceManager.getLevelFromExp(exp);
         long target = ExperienceManager.getExpAtLevel(level + 1);
@@ -91,13 +117,17 @@ public class JobsMenuManager implements Listener {
         ItemStack itemStack = new ItemStack(itemType);
         ItemMeta meta = itemStack.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.displayName(plugin.formatComponent(jobType + ".name"));
-        meta.lore(plugin.formatComponents("menu.job-lore-" + (shortDescription ? "short" : "long"),
+        meta.lore(plugin.formatComponents("menu.job-lore" + (isSelected ? "-selected" : ""),
                 "{LEVEL}", level,
                 "{CURRENT_EXP}", exp - floor,
                 "{TARGET_EXP}", target - floor,
                 "{TOTAL_EXP}", exp
         ));
+        if (isSelected) {
+            meta.addEnchant(Enchantment.LURE, 1, true);
+        }
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -136,13 +166,16 @@ public class JobsMenuManager implements Listener {
         event.setCancelled(true);
 
         if (menu.selectedJob != null && event.getClick() == ClickType.RIGHT) {
-            openMainPage(menu);
+            drawEntirePage(menu, null);
             return;
         }
 
-        if (menu.selectedJob == null && event.getClick() == ClickType.LEFT) {
-            if (event.getSlot() == 10) {
-                openJobPage(menu, "woodcutting");
+        if (event.getClick() == ClickType.LEFT) {
+            if (event.getSlot() == 0) {
+                drawEntirePage(menu, WoodcuttingManager.JOB_TYPE);
+            }
+            if (event.getSlot() == 1) {
+                drawEntirePage(menu, MiningManager.JOB_TYPE);
             }
         }
     }

@@ -9,18 +9,31 @@ messages:
 
 menu:
   title: "Jobs"
-  job-lore-short: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp points\n§7Click for details"
-  job-lore-long: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp points\n§a{TOTAL_EXP}§b total exp"
+  job-lore: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§7Click for details"
+  job-lore-selected: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§a{TOTAL_EXP}§b total exp"
 
 woodcutting:
   name: "§2Woodcutting§r"
-  icon: "OAK_SAPLING"
+  icon: "IRON_AXE"
   skills:
     gatherer:
       name: "§2Gatherer"
       icon: "OAK_LOG"
-      description: "§a{BONUS}%§b chance to double your logs.\n§bIncreases with your level."
+      description: "§a{BONUS}%§b chance to double your logs.\n§7Increases with your level."
     careful:
       name: "§2Careful"
-      icon: "IRON_AXE"
-      description: "§bYour axes break §a{BONUS}%§b slower.\n§bIncreases with your level."
+      icon: "GOLDEN_AXE"
+      description: "§bYour axes break §a{BONUS}%§b slower.\n§7Increases with your level."
+
+mining:
+  name: "§7Mining§r"
+  icon: "IRON_PICKAXE"
+  skills:
+    gatherer:
+      name: "§7Gatherer"
+      icon: "IRON_ORE"
+      description: "§a{BONUS}%§b chance to double your ores.\n§7Increases with your level."
+    careful:
+      name: "§7Careful"
+      icon: "GOLDEN_PICKAXE"
+      description: "§bYour pickaxes break §a{BONUS}%§b slower.\n§7Increases with your level."

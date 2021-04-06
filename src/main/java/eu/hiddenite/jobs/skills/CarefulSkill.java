@@ -1,5 +1,6 @@
 package eu.hiddenite.jobs.skills;
 
+import eu.hiddenite.jobs.MiningManager;
 import eu.hiddenite.jobs.WoodcuttingManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,15 @@ public class CarefulSkill {
             Material.NETHERITE_AXE
     ));
 
+    private static final HashSet<Material> pickaxes = new HashSet<>(Arrays.asList(
+            Material.WOODEN_PICKAXE,
+            Material.STONE_PICKAXE,
+            Material.IRON_PICKAXE,
+            Material.GOLDEN_PICKAXE,
+            Material.DIAMOND_PICKAXE,
+            Material.NETHERITE_PICKAXE
+    ));
+
     public static double getChance(int level) {
         return (double)Math.min(100, level) / 100.0 / 2.0;
     }
@@ -30,6 +40,9 @@ public class CarefulSkill {
             return false;
         }
         if (jobType.equals(WoodcuttingManager.JOB_TYPE) && !axes.contains(item.getType())) {
+            return false;
+        }
+        if (jobType.equals(MiningManager.JOB_TYPE) && !pickaxes.contains(item.getType())) {
             return false;
         }
         return true;

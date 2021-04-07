@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class GathererSkill {
+    public static final String NAME = "gatherer";
+    public static final int REQUIRED_LEVEL = 5;
+
     private static final Random random = new Random();
 
     private static final HashSet<Material> allowedMaterials = new HashSet<>(Arrays.asList(
@@ -38,7 +41,12 @@ public class GathererSkill {
 
             Material.NETHER_GOLD_ORE,
             Material.NETHER_QUARTZ_ORE,
-            Material.ANCIENT_DEBRIS
+            Material.ANCIENT_DEBRIS,
+
+            Material.COD,
+            Material.SALMON,
+            Material.TROPICAL_FISH,
+            Material.PUFFERFISH
     ));
 
     public static double getChance(int level) {
@@ -46,6 +54,9 @@ public class GathererSkill {
     }
 
     public static void apply(ItemStack item, int level) {
+        if (level < REQUIRED_LEVEL) {
+            return;
+        }
         double chance = getChance(level);
         if (random.nextDouble() >= chance) {
             return;

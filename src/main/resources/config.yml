@@ -9,7 +9,7 @@ messages:
 
 menu:
   title: "Jobs"
-  job-lore: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§7Click for details"
+  job-lore: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§7Click for skills and details"
   job-lore-selected: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§a{TOTAL_EXP}§b total exp"
   hidden-skill:
     description: "§cRequires level §6{LEVEL}"
@@ -20,23 +20,23 @@ woodcutting:
   icon: "IRON_AXE"
   skills:
     gatherer:
-      name: "§2Gatherer"
+      name: "§6Gatherer"
       icon: "OAK_LOG"
       description: "§a{BONUS}%§b chance to double your logs.\n§7Increases with your level."
     careful:
-      name: "§2Careful"
+      name: "§6Careful"
       icon: "GOLDEN_AXE"
       description: "§bYour axes break §a{BONUS}%§b slower.\n§7Increases with your level."
     calculator1:
-      name: "§2Calculator I"
+      name: "§6Calculator I"
       icon: "OAK_SAPLING"
       description: "§bBreak small trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
     calculator2:
-      name: "§2Calculator II"
+      name: "§6Calculator II"
       icon: "BIRCH_SAPLING"
       description: "§bBreak medium trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
     calculator3:
-      name: "§2Calculator III"
+      name: "§6Calculator III"
       icon: "JUNGLE_SAPLING"
       description: "§bBreak large trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
 
@@ -46,10 +46,29 @@ mining:
   icon: "IRON_PICKAXE"
   skills:
     gatherer:
-      name: "§7Gatherer"
+      name: "§6Gatherer"
       icon: "IRON_ORE"
       description: "§a{BONUS}%§b chance to double your ores.\n§7Increases with your level."
     careful:
-      name: "§7Careful"
+      name: "§6Careful"
       icon: "GOLDEN_PICKAXE"
       description: "§bYour pickaxes break §a{BONUS}%§b slower.\n§7Increases with your level."
+
+fishing:
+  name: "§3Fishing§r"
+  bar-color: "BLUE"
+  icon: "FISHING_ROD"
+  hint-deep-water: "§bFish in §3deep water§b to get more loot and experience!"
+  skills:
+    gatherer:
+      name: "§6Gatherer"
+      icon: "COD"
+      description: "§a{BONUS}%§b chance to catch two fish.\n§7Increases with your level."
+    careful:
+      name: "§6Careful"
+      icon: "FISHING_ROD"
+      description: "§bYour fishing rods break §a{BONUS}%§b slower.\n§7Increases with your level."
+    impatient:
+      name: "§6Impatient"
+      icon: "CLOCK"
+      description: "§bReduce the wait time by §a{BONUS}%§b.\n§7Improves with your level."

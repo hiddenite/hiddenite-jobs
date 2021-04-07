@@ -1,8 +1,12 @@
 package eu.hiddenite.jobs;
 
+import eu.hiddenite.jobs.jobs.FishingManager;
+import eu.hiddenite.jobs.jobs.MiningManager;
+import eu.hiddenite.jobs.jobs.WoodcuttingManager;
 import eu.hiddenite.jobs.skills.CalculatorSkill;
 import eu.hiddenite.jobs.skills.CarefulSkill;
 import eu.hiddenite.jobs.skills.GathererSkill;
+import eu.hiddenite.jobs.skills.ImpatientSkill;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -76,6 +80,9 @@ public class JobsMenuManager implements Listener {
 
         ItemStack mining = createJobItem(menu.player, MiningManager.JOB_TYPE, MiningManager.JOB_TYPE.equals(menu.selectedJob));
         menu.inventory.setItem(1, mining);
+
+        ItemStack fishing = createJobItem(menu.player, FishingManager.JOB_TYPE, FishingManager.JOB_TYPE.equals(menu.selectedJob));
+        menu.inventory.setItem(2, fishing);
     }
 
     private void drawSkills(InventoryMenu menu) {
@@ -83,28 +90,34 @@ public class JobsMenuManager implements Listener {
             return;
         }
 
-        int slot = 19;
+        int slot = 18;
 
         switch (menu.selectedJob) {
             case WoodcuttingManager.JOB_TYPE:
             case MiningManager.JOB_TYPE:
-                ItemStack gatherer = createSkillItem(menu.player, menu.selectedJob, "gatherer");
-                menu.inventory.setItem(slot++, gatherer);
+            case FishingManager.JOB_TYPE:
+                ItemStack careful = createSkillItem(menu.player, menu.selectedJob, CarefulSkill.NAME);
+                menu.inventory.setItem(++slot, careful);
 
-                ItemStack careful = createSkillItem(menu.player, menu.selectedJob, "careful");
-                menu.inventory.setItem(slot++, careful);
+                ItemStack gatherer = createSkillItem(menu.player, menu.selectedJob, GathererSkill.NAME);
+                menu.inventory.setItem(++slot, gatherer);
                 break;
         }
 
         if (WoodcuttingManager.JOB_TYPE.equals(menu.selectedJob)) {
             ItemStack calculator1 = createSkillItem(menu.player, menu.selectedJob, "calculator1");
-            menu.inventory.setItem(slot++, calculator1);
+            menu.inventory.setItem(++slot, calculator1);
 
             ItemStack calculator2 = createSkillItem(menu.player, menu.selectedJob, "calculator2");
-            menu.inventory.setItem(slot++, calculator2);
+            menu.inventory.setItem(++slot, calculator2);
 
             ItemStack calculator3 = createSkillItem(menu.player, menu.selectedJob, "calculator3");
-            menu.inventory.setItem(slot, calculator3);
+            menu.inventory.setItem(++slot, calculator3);
+        }
+
+        if (FishingManager.JOB_TYPE.equals(menu.selectedJob)) {
+            ItemStack impatient = createSkillItem(menu.player, menu.selectedJob, "impatient");
+            menu.inventory.setItem(++slot, impatient);
         }
     }
 
@@ -149,28 +162,31 @@ public class JobsMenuManager implements Listener {
     private ItemStack createSkillItem(Player player, String jobType, String skill) {
         int level = plugin.getExperienceManager().getPlayerLevel(player, jobType);
         int requiredLevel = 0;
-
         double bonus = 0;
-        switch (skill) {
-            case "gatherer":
-                bonus = GathererSkill.getChance(level);
-                break;
-            case "careful":
-                bonus = CarefulSkill.getChance(level);
-                break;
-        }
-
         int cooldown = 0;
+
         switch (skill) {
-            case "calculator1":
+            case CarefulSkill.NAME:
+                bonus = CarefulSkill.getChance(level);
+                requiredLevel = CarefulSkill.REQUIRED_LEVEL;
+                break;
+            case GathererSkill.NAME:
+                bonus = GathererSkill.getChance(level);
+                requiredLevel = GathererSkill.REQUIRED_LEVEL;
+                break;
+            case ImpatientSkill.NAME:
+                bonus = ImpatientSkill.getBonus(level);
+                requiredLevel = ImpatientSkill.REQUIRED_LEVEL;
+                break;
+            case CalculatorSkill.NAME + "1":
                 cooldown = CalculatorSkill.getCooldown(level, 1);
                 requiredLevel = CalculatorSkill.getRequiredLevelForRank(1);
                 break;
-            case "calculator2":
+            case CalculatorSkill.NAME + "2":
                 cooldown = CalculatorSkill.getCooldown(level, 2);
                 requiredLevel = CalculatorSkill.getRequiredLevelForRank(2);
                 break;
-            case "calculator3":
+            case CalculatorSkill.NAME + "3":
                 cooldown = CalculatorSkill.getCooldown(level, 3);
                 requiredLevel = CalculatorSkill.getRequiredLevelForRank(3);
                 break;
@@ -215,6 +231,9 @@ public class JobsMenuManager implements Listener {
             }
             if (event.getSlot() == 1) {
                 drawEntirePage(menu, MiningManager.JOB_TYPE);
+            }
+            if (event.getSlot() == 2) {
+                drawEntirePage(menu, FishingManager.JOB_TYPE);
             }
         }
     }

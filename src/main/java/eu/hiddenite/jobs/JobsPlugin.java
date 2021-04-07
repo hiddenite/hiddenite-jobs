@@ -1,5 +1,8 @@
 package eu.hiddenite.jobs;
 
+import eu.hiddenite.jobs.jobs.FishingManager;
+import eu.hiddenite.jobs.jobs.MiningManager;
+import eu.hiddenite.jobs.jobs.WoodcuttingManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -43,8 +46,9 @@ public class JobsPlugin extends JavaPlugin {
         experienceManager = new ExperienceManager(this);
         jobsMenuManager = new JobsMenuManager(this);
 
-        new WoodcuttingManager(this);
+        new FishingManager(this);
         new MiningManager(this);
+        new WoodcuttingManager(this);
     }
 
     @Override
@@ -83,11 +87,9 @@ public class JobsPlugin extends JavaPlugin {
                 .collect(Collectors.toList());
     }
 
-    public void sendMessage(Player player, String key, Object... parameters) {
-        player.sendMessage(formatComponent(formatMessage(key, parameters)));
-    }
-
     public void sendActionBar(Player player, String key, Object... parameters) {
-        player.sendActionBar(formatComponent(key, parameters));
+        Component component = formatComponent(key, parameters);
+        player.sendActionBar(component);
+        getServer().getScheduler().scheduleSyncDelayedTask(this, () -> player.sendActionBar(component), 40);
     }
 }

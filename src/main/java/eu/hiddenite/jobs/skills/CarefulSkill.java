@@ -1,7 +1,8 @@
 package eu.hiddenite.jobs.skills;
 
-import eu.hiddenite.jobs.MiningManager;
-import eu.hiddenite.jobs.WoodcuttingManager;
+import eu.hiddenite.jobs.jobs.FishingManager;
+import eu.hiddenite.jobs.jobs.MiningManager;
+import eu.hiddenite.jobs.jobs.WoodcuttingManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,6 +11,9 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class CarefulSkill {
+    public static final String NAME = "careful";
+    public static final int REQUIRED_LEVEL = 1;
+
     private static final Random random = new Random();
 
     private static final HashSet<Material> axes = new HashSet<>(Arrays.asList(
@@ -35,6 +39,9 @@ public class CarefulSkill {
     }
 
     public static boolean shouldApply(ItemStack item, int level, String jobType) {
+        if (level < REQUIRED_LEVEL) {
+            return false;
+        }
         double chance = getChance(level);
         if (random.nextDouble() >= chance) {
             return false;
@@ -43,6 +50,9 @@ public class CarefulSkill {
             return false;
         }
         if (jobType.equals(MiningManager.JOB_TYPE) && !pickaxes.contains(item.getType())) {
+            return false;
+        }
+        if (jobType.equals(FishingManager.JOB_TYPE) && item.getType() != Material.FISHING_ROD) {
             return false;
         }
         return true;

@@ -1,5 +1,6 @@
-package eu.hiddenite.jobs;
+package eu.hiddenite.jobs.jobs;
 
+import eu.hiddenite.jobs.JobsPlugin;
 import eu.hiddenite.jobs.helpers.BlockPosition;
 import eu.hiddenite.jobs.skills.CalculatorSkill;
 import eu.hiddenite.jobs.skills.CarefulSkill;

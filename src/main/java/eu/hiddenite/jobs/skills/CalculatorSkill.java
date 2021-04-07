@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class CalculatorSkill {
+    public static final String NAME = "calculator";
+
     private static final HashSet<Material> logs = new HashSet<>(Arrays.asList(
             Material.ACACIA_LOG,
             Material.BIRCH_LOG,

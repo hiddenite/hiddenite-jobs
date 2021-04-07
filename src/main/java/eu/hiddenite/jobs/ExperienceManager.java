@@ -168,7 +168,7 @@ public class ExperienceManager {
             expBar.bossBar = BossBar.bossBar(
                     plugin.formatComponent(jobType + ".name"),
                     from,
-                    BossBar.Color.GREEN,
+                    BossBar.Color.valueOf(plugin.getConfig().getString(jobType + ".bar-color")),
                     BossBar.Overlay.NOTCHED_10
             );
             player.showBossBar(expBar.bossBar);

@@ -11,9 +11,12 @@ menu:
   title: "Jobs"
   job-lore: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§7Click for details"
   job-lore-selected: "§bLevel §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§a{TOTAL_EXP}§b total exp"
+  hidden-skill:
+    description: "§cRequires level §6{LEVEL}"
 
 woodcutting:
   name: "§2Woodcutting§r"
+  bar-color: "GREEN"
   icon: "IRON_AXE"
   skills:
     gatherer:
@@ -24,9 +27,22 @@ woodcutting:
       name: "§2Careful"
       icon: "GOLDEN_AXE"
       description: "§bYour axes break §a{BONUS}%§b slower.\n§7Increases with your level."
+    calculator1:
+      name: "§2Calculator I"
+      icon: "OAK_SAPLING"
+      description: "§bBreak small trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
+    calculator2:
+      name: "§2Calculator II"
+      icon: "BIRCH_SAPLING"
+      description: "§bBreak medium trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
+    calculator3:
+      name: "§2Calculator III"
+      icon: "JUNGLE_SAPLING"
+      description: "§bBreak large trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
 
 mining:
   name: "§7Mining§r"
+  bar-color: "WHITE"
   icon: "IRON_PICKAXE"
   skills:
     gatherer:

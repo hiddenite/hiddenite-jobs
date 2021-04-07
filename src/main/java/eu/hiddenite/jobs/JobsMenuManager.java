@@ -1,5 +1,6 @@
 package eu.hiddenite.jobs;
 
+import eu.hiddenite.jobs.skills.CalculatorSkill;
 import eu.hiddenite.jobs.skills.CarefulSkill;
 import eu.hiddenite.jobs.skills.GathererSkill;
 import net.kyori.adventure.text.Component;
@@ -82,15 +83,28 @@ public class JobsMenuManager implements Listener {
             return;
         }
 
+        int slot = 19;
+
         switch (menu.selectedJob) {
             case WoodcuttingManager.JOB_TYPE:
             case MiningManager.JOB_TYPE:
                 ItemStack gatherer = createSkillItem(menu.player, menu.selectedJob, "gatherer");
-                menu.inventory.setItem(19, gatherer);
+                menu.inventory.setItem(slot++, gatherer);
 
                 ItemStack careful = createSkillItem(menu.player, menu.selectedJob, "careful");
-                menu.inventory.setItem(20, careful);
+                menu.inventory.setItem(slot++, careful);
                 break;
+        }
+
+        if (WoodcuttingManager.JOB_TYPE.equals(menu.selectedJob)) {
+            ItemStack calculator1 = createSkillItem(menu.player, menu.selectedJob, "calculator1");
+            menu.inventory.setItem(slot++, calculator1);
+
+            ItemStack calculator2 = createSkillItem(menu.player, menu.selectedJob, "calculator2");
+            menu.inventory.setItem(slot++, calculator2);
+
+            ItemStack calculator3 = createSkillItem(menu.player, menu.selectedJob, "calculator3");
+            menu.inventory.setItem(slot, calculator3);
         }
     }
 
@@ -134,6 +148,7 @@ public class JobsMenuManager implements Listener {
 
     private ItemStack createSkillItem(Player player, String jobType, String skill) {
         int level = plugin.getExperienceManager().getPlayerLevel(player, jobType);
+        int requiredLevel = 0;
 
         double bonus = 0;
         switch (skill) {
@@ -145,13 +160,37 @@ public class JobsMenuManager implements Listener {
                 break;
         }
 
+        int cooldown = 0;
+        switch (skill) {
+            case "calculator1":
+                cooldown = CalculatorSkill.getCooldown(level, 1);
+                requiredLevel = CalculatorSkill.getRequiredLevelForRank(1);
+                break;
+            case "calculator2":
+                cooldown = CalculatorSkill.getCooldown(level, 2);
+                requiredLevel = CalculatorSkill.getRequiredLevelForRank(2);
+                break;
+            case "calculator3":
+                cooldown = CalculatorSkill.getCooldown(level, 3);
+                requiredLevel = CalculatorSkill.getRequiredLevelForRank(3);
+                break;
+        }
+
         Material itemType = Material.valueOf(plugin.getConfig().getString(jobType + ".skills." + skill + ".icon"));
         ItemStack itemStack = new ItemStack(itemType);
         ItemMeta meta = itemStack.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.displayName(plugin.formatComponent(jobType + ".skills." + skill + ".name"));
-        meta.lore(plugin.formatComponents(jobType + ".skills." + skill + ".description",
-                "{BONUS}", bonusDecimalFormat.format(bonus * 100)));
+
+        if (level < requiredLevel) {
+            meta.lore(plugin.formatComponents("menu.hidden-skill.description",
+                    "{LEVEL}", requiredLevel));
+        } else {
+            meta.lore(plugin.formatComponents(jobType + ".skills." + skill + ".description",
+                    "{BONUS}", bonusDecimalFormat.format(bonus * 100),
+                    "{COOLDOWN}", cooldown));
+        }
+
         itemStack.setItemMeta(meta);
         return itemStack;
     }

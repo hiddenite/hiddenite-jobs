@@ -2,8 +2,10 @@ package eu.hiddenite.jobs.jobs;
 
 import eu.hiddenite.jobs.JobsPlugin;
 import eu.hiddenite.jobs.helpers.BlockPosition;
+import eu.hiddenite.jobs.helpers.MaterialTypes;
 import eu.hiddenite.jobs.skills.CarefulSkill;
 import eu.hiddenite.jobs.skills.GathererSkill;
+import eu.hiddenite.jobs.skills.Skill;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -13,17 +15,28 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
-public class MiningManager implements Listener {
+public class MiningJob extends Job implements Listener {
     public static final String JOB_TYPE = "mining";
 
     private final JobsPlugin plugin;
     private final HashMap<Material, Integer> expPerMaterial = new HashMap<>();
 
+    private final CarefulSkill careful = new CarefulSkill(1, MaterialTypes.PICKAXES);
+    private final GathererSkill gatherer = new GathererSkill(5, MaterialTypes.ORES);
+
+    private final List<Skill> skills = new ArrayList<>(Arrays.asList(
+            careful,
+            gatherer
+    ));
+
     private BlockPosition lastBrokenBlock = null;
 
-    public MiningManager(JobsPlugin plugin) {
+    public MiningJob(JobsPlugin plugin) {
         this.plugin = plugin;
 
         loadMaterials();
@@ -31,18 +44,28 @@ public class MiningManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    @Override
+    public String getType() {
+        return JOB_TYPE;
+    }
+
+    @Override
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
     private void loadMaterials() {
         expPerMaterial.put(Material.COAL_ORE, 10);
         expPerMaterial.put(Material.IRON_ORE, 15);
         expPerMaterial.put(Material.REDSTONE_ORE, 15);
         expPerMaterial.put(Material.LAPIS_ORE, 20);
-        expPerMaterial.put(Material.GOLD_ORE, 20);
-        expPerMaterial.put(Material.DIAMOND_ORE, 40);
-        expPerMaterial.put(Material.EMERALD_ORE, 80);
+        expPerMaterial.put(Material.GOLD_ORE, 30);
+        expPerMaterial.put(Material.DIAMOND_ORE, 60);
+        expPerMaterial.put(Material.EMERALD_ORE, 120);
 
         expPerMaterial.put(Material.NETHER_GOLD_ORE, 20);
         expPerMaterial.put(Material.NETHER_QUARTZ_ORE, 20);
-        expPerMaterial.put(Material.ANCIENT_DEBRIS, 140);
+        expPerMaterial.put(Material.ANCIENT_DEBRIS, 200);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -68,7 +91,7 @@ public class MiningManager implements Listener {
 
         int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
         for (Item item : event.getItems()) {
-            GathererSkill.apply(item.getItemStack(), level);
+            gatherer.apply(item.getItemStack(), level);
         }
     }
 
@@ -76,7 +99,7 @@ public class MiningManager implements Listener {
     public void onPlayerItemDamage(PlayerItemDamageEvent event) {
         int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
 
-        if (CarefulSkill.shouldApply(event.getItem(), level, JOB_TYPE)) {
+        if (careful.shouldApply(event.getItem(), level)) {
             event.setCancelled(true);
         }
     }

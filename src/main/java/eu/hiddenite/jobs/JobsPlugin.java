@@ -1,14 +1,13 @@
 package eu.hiddenite.jobs;
 
-import eu.hiddenite.jobs.jobs.FishingManager;
-import eu.hiddenite.jobs.jobs.MiningManager;
-import eu.hiddenite.jobs.jobs.WoodcuttingManager;
+import eu.hiddenite.jobs.jobs.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +29,11 @@ public class JobsPlugin extends JavaPlugin {
         return experienceManager;
     }
 
+    private List<Job> jobs = new ArrayList<>();
+    public List<Job> getJobs() {
+        return jobs;
+    };
+
     private JobsMenuManager jobsMenuManager;
 
     @Override
@@ -46,9 +50,12 @@ public class JobsPlugin extends JavaPlugin {
         experienceManager = new ExperienceManager(this);
         jobsMenuManager = new JobsMenuManager(this);
 
-        new FishingManager(this);
-        new MiningManager(this);
-        new WoodcuttingManager(this);
+        jobs = new ArrayList<>(Arrays.asList(
+                new WoodcuttingJob(this),
+                new MiningJob(this),
+                new FarmingJob(this),
+                new FishingJob(this)
+        ));
     }
 
     @Override

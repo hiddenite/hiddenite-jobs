@@ -15,18 +15,22 @@ menu:
     description: "§cRequires level §6{LEVEL}"
 
 woodcutting:
-  name: "§2Woodcutting§r"
+  name: "§2Woodcutting"
   bar-color: "GREEN"
   icon: "IRON_AXE"
   skills:
-    gatherer:
-      name: "§6Gatherer"
-      icon: "OAK_LOG"
-      description: "§a{BONUS}%§b chance to double your logs.\n§7Increases with your level."
     careful:
       name: "§6Careful"
       icon: "GOLDEN_AXE"
       description: "§bYour axes break §a{BONUS}%§b slower.\n§7Increases with your level."
+    gatherer:
+      name: "§6Gatherer"
+      icon: "OAK_LOG"
+      description: "§a{BONUS}%§b chance to double your logs.\n§7Increases with your level."
+    defoliator:
+      name: "§6Defoliator"
+      icon: "OAK_LEAVES"
+      description: "§bAxes break §anatural leaves§b instantly.\n§aLeaves§b no longer reduce durability."
     calculator1:
       name: "§6Calculator I"
       icon: "OAK_SAPLING"
@@ -41,33 +45,69 @@ woodcutting:
       description: "§bBreak large trees in a single chop.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
 
 mining:
-  name: "§7Mining§r"
+  name: "§7Mining"
   bar-color: "WHITE"
   icon: "IRON_PICKAXE"
   skills:
-    gatherer:
-      name: "§6Gatherer"
-      icon: "IRON_ORE"
-      description: "§a{BONUS}%§b chance to double your ores.\n§7Increases with your level."
     careful:
       name: "§6Careful"
       icon: "GOLDEN_PICKAXE"
       description: "§bYour pickaxes break §a{BONUS}%§b slower.\n§7Increases with your level."
+    gatherer:
+      name: "§6Gatherer"
+      icon: "IRON_ORE"
+      description: "§a{BONUS}%§b chance to double your ores.\n§7Increases with your level."
+
+farming:
+  name: "§aFarming"
+  bar-color: "GREEN"
+  icon: "IRON_HOE"
+  skills:
+    careful:
+      name: "§6Careful"
+      icon: "GOLDEN_HOE"
+      description: "§bYour hoes break §a{BONUS}%§b slower.\n§7Increases with your level."
+    gatherer:
+      name: "§6Gatherer"
+      icon: "CARROT"
+      description: "§a{BONUS}%§b chance to double your harvests.\n§7Increases with your level."
+    crops-feather:
+      name: "§6As a feather"
+      icon: "FEATHER"
+      description: "§bJumping on §acrops§b no longer\n§bbreak them."
 
 fishing:
-  name: "§3Fishing§r"
+  name: "§3Fishing"
   bar-color: "BLUE"
   icon: "FISHING_ROD"
   hint-deep-water: "§bFish in §3deep water§b to get more loot and experience!"
   skills:
-    gatherer:
-      name: "§6Gatherer"
-      icon: "COD"
-      description: "§a{BONUS}%§b chance to catch two fish.\n§7Increases with your level."
     careful:
       name: "§6Careful"
       icon: "FISHING_ROD"
       description: "§bYour fishing rods break §a{BONUS}%§b slower.\n§7Increases with your level."
+    gatherer:
+      name: "§6Gatherer"
+      icon: "COD"
+      description: "§a{BONUS}%§b chance to catch two fish.\n§7Increases with your level."
+    impatient:
+      name: "§6Impatient"
+      icon: "CLOCK"
+      description: "§bReduce the wait time by §a{BONUS}%§b.\n§7Improves with your level."
+
+hunter:
+  name: "§cHunter"
+  bar-color: "RED"
+  icon: "IRON_SWORD"
+  skills:
+    careful:
+      name: "§6Careful"
+      icon: "FISHING_ROD"
+      description: "§bYour fishing rods break §a{BONUS}%§b slower.\n§7Increases with your level."
+    gatherer:
+      name: "§6Gatherer"
+      icon: "COD"
+      description: "§a{BONUS}%§b chance to catch two fish.\n§7Increases with your level."
     impatient:
       name: "§6Impatient"
       icon: "CLOCK"

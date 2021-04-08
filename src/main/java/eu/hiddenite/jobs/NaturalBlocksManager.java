@@ -66,6 +66,13 @@ public class NaturalBlocksManager implements Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onBlockFertilize(BlockFertilizeEvent event) {
+        for (BlockState blockState : event.getBlocks()) {
+            markAsNatural(blockState.getBlock());
+        }
+    }
+
     private void handlePistonEvent(List<Block> blocks, BlockFace direction) {
         for (Block block : blocks) {
             markAsDirty(block);

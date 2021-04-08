@@ -1,12 +1,7 @@
 package eu.hiddenite.jobs;
 
-import eu.hiddenite.jobs.jobs.FishingManager;
-import eu.hiddenite.jobs.jobs.MiningManager;
-import eu.hiddenite.jobs.jobs.WoodcuttingManager;
-import eu.hiddenite.jobs.skills.CalculatorSkill;
-import eu.hiddenite.jobs.skills.CarefulSkill;
-import eu.hiddenite.jobs.skills.GathererSkill;
-import eu.hiddenite.jobs.skills.ImpatientSkill;
+import eu.hiddenite.jobs.jobs.Job;
+import eu.hiddenite.jobs.skills.Skill;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -24,13 +19,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class JobsMenuManager implements Listener {
     private static class InventoryMenu {
         public Inventory inventory;
         public Player player;
-        public String selectedJob;
+        public Job selectedJob;
     }
 
     private final JobsPlugin plugin;
@@ -64,8 +60,8 @@ public class JobsMenuManager implements Listener {
         openMenus.put(menu.inventory, menu);
     }
 
-    private void drawEntirePage(InventoryMenu menu, String jobType) {
-        menu.selectedJob = jobType;
+    private void drawEntirePage(InventoryMenu menu, Job job) {
+        menu.selectedJob = job;
         menu.inventory.clear();
 
         drawJobs(menu);
@@ -75,14 +71,11 @@ public class JobsMenuManager implements Listener {
     }
 
     private void drawJobs(InventoryMenu menu) {
-        ItemStack woodcutting = createJobItem(menu.player, WoodcuttingManager.JOB_TYPE, WoodcuttingManager.JOB_TYPE.equals(menu.selectedJob));
-        menu.inventory.setItem(0, woodcutting);
-
-        ItemStack mining = createJobItem(menu.player, MiningManager.JOB_TYPE, MiningManager.JOB_TYPE.equals(menu.selectedJob));
-        menu.inventory.setItem(1, mining);
-
-        ItemStack fishing = createJobItem(menu.player, FishingManager.JOB_TYPE, FishingManager.JOB_TYPE.equals(menu.selectedJob));
-        menu.inventory.setItem(2, fishing);
+        int slot = 0;
+        for (Job job : plugin.getJobs()) {
+            ItemStack jobButton = createJobItem(menu.player, job.getType(), job.equals(menu.selectedJob));
+            menu.inventory.setItem(slot++, jobButton);
+        }
     }
 
     private void drawSkills(InventoryMenu menu) {
@@ -90,34 +83,12 @@ public class JobsMenuManager implements Listener {
             return;
         }
 
-        int slot = 18;
+        int slot = 19;
+        List<Skill> skills = menu.selectedJob.getSkills();
 
-        switch (menu.selectedJob) {
-            case WoodcuttingManager.JOB_TYPE:
-            case MiningManager.JOB_TYPE:
-            case FishingManager.JOB_TYPE:
-                ItemStack careful = createSkillItem(menu.player, menu.selectedJob, CarefulSkill.NAME);
-                menu.inventory.setItem(++slot, careful);
-
-                ItemStack gatherer = createSkillItem(menu.player, menu.selectedJob, GathererSkill.NAME);
-                menu.inventory.setItem(++slot, gatherer);
-                break;
-        }
-
-        if (WoodcuttingManager.JOB_TYPE.equals(menu.selectedJob)) {
-            ItemStack calculator1 = createSkillItem(menu.player, menu.selectedJob, "calculator1");
-            menu.inventory.setItem(++slot, calculator1);
-
-            ItemStack calculator2 = createSkillItem(menu.player, menu.selectedJob, "calculator2");
-            menu.inventory.setItem(++slot, calculator2);
-
-            ItemStack calculator3 = createSkillItem(menu.player, menu.selectedJob, "calculator3");
-            menu.inventory.setItem(++slot, calculator3);
-        }
-
-        if (FishingManager.JOB_TYPE.equals(menu.selectedJob)) {
-            ItemStack impatient = createSkillItem(menu.player, menu.selectedJob, "impatient");
-            menu.inventory.setItem(++slot, impatient);
+        for (Skill skill : skills) {
+            ItemStack skillButton = createSkillItem(menu.player, menu.selectedJob.getType(), skill);
+            menu.inventory.setItem(slot++, skillButton);
         }
     }
 
@@ -159,50 +130,23 @@ public class JobsMenuManager implements Listener {
         return itemStack;
     }
 
-    private ItemStack createSkillItem(Player player, String jobType, String skill) {
+    private ItemStack createSkillItem(Player player, String jobType, Skill skill) {
         int level = plugin.getExperienceManager().getPlayerLevel(player, jobType);
-        int requiredLevel = 0;
-        double bonus = 0;
-        int cooldown = 0;
+        int requiredLevel = skill.getRequiredLevel();
+        double bonus = skill.getBonus(level);
+        int cooldown = skill.getCooldown(level);
 
-        switch (skill) {
-            case CarefulSkill.NAME:
-                bonus = CarefulSkill.getChance(level);
-                requiredLevel = CarefulSkill.REQUIRED_LEVEL;
-                break;
-            case GathererSkill.NAME:
-                bonus = GathererSkill.getChance(level);
-                requiredLevel = GathererSkill.REQUIRED_LEVEL;
-                break;
-            case ImpatientSkill.NAME:
-                bonus = ImpatientSkill.getBonus(level);
-                requiredLevel = ImpatientSkill.REQUIRED_LEVEL;
-                break;
-            case CalculatorSkill.NAME + "1":
-                cooldown = CalculatorSkill.getCooldown(level, 1);
-                requiredLevel = CalculatorSkill.getRequiredLevelForRank(1);
-                break;
-            case CalculatorSkill.NAME + "2":
-                cooldown = CalculatorSkill.getCooldown(level, 2);
-                requiredLevel = CalculatorSkill.getRequiredLevelForRank(2);
-                break;
-            case CalculatorSkill.NAME + "3":
-                cooldown = CalculatorSkill.getCooldown(level, 3);
-                requiredLevel = CalculatorSkill.getRequiredLevelForRank(3);
-                break;
-        }
-
-        Material itemType = Material.valueOf(plugin.getConfig().getString(jobType + ".skills." + skill + ".icon"));
+        Material itemType = Material.valueOf(plugin.getConfig().getString(jobType + ".skills." + skill.getType() + ".icon"));
         ItemStack itemStack = new ItemStack(itemType);
         ItemMeta meta = itemStack.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.displayName(plugin.formatComponent(jobType + ".skills." + skill + ".name"));
+        meta.displayName(plugin.formatComponent(jobType + ".skills." + skill.getType() + ".name"));
 
         if (level < requiredLevel) {
             meta.lore(plugin.formatComponents("menu.hidden-skill.description",
                     "{LEVEL}", requiredLevel));
         } else {
-            meta.lore(plugin.formatComponents(jobType + ".skills." + skill + ".description",
+            meta.lore(plugin.formatComponents(jobType + ".skills." + skill.getType() + ".description",
                     "{BONUS}", bonusDecimalFormat.format(bonus * 100),
                     "{COOLDOWN}", cooldown));
         }
@@ -225,15 +169,9 @@ public class JobsMenuManager implements Listener {
             return;
         }
 
-        if (event.getClick() == ClickType.LEFT) {
-            if (event.getSlot() == 0) {
-                drawEntirePage(menu, WoodcuttingManager.JOB_TYPE);
-            }
-            if (event.getSlot() == 1) {
-                drawEntirePage(menu, MiningManager.JOB_TYPE);
-            }
-            if (event.getSlot() == 2) {
-                drawEntirePage(menu, FishingManager.JOB_TYPE);
+        if (event.getClick() == ClickType.LEFT && event.getInventory().equals(event.getClickedInventory())) {
+            if (event.getSlot() >= 0 && event.getSlot() < plugin.getJobs().size()) {
+                drawEntirePage(menu, plugin.getJobs().get(event.getSlot()));
             }
         }
     }

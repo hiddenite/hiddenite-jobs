@@ -1,7 +1,7 @@
 package eu.hiddenite.jobs;
 
 import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.Material;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -16,6 +16,7 @@ public class ExperienceManager {
     private static class ExpBossBar {
         public BossBar bossBar = null;
         public int taskId = 0;
+        public int level = 0;
     }
 
     private final JobsPlugin plugin;
@@ -138,7 +139,7 @@ public class ExperienceManager {
         float currentProgress = (float)(currentExp - currentLow) / (float)(currentHigh - currentLow);
 
         playersExperience.get(jobType).put(player.getUniqueId(), currentExp);
-        displayBossBar(player, jobType, previousProgress, currentProgress);
+        displayBossBar(player, jobType, currentLevel, previousProgress, currentProgress);
 
         if (previousLevel != currentLevel) {
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
@@ -156,7 +157,7 @@ public class ExperienceManager {
         }
     }
 
-    private void displayBossBar(Player player, String jobType, float from, float to) {
+    private void displayBossBar(Player player, String jobType, int level, float from, float to) {
         if (!currentBossBars.containsKey(jobType)) {
             currentBossBars.put(jobType, new HashMap<>());
         }
@@ -165,8 +166,9 @@ public class ExperienceManager {
 
         if (expBar == null) {
             expBar = new ExpBossBar();
+            expBar.level = level;
             expBar.bossBar = BossBar.bossBar(
-                    plugin.formatComponent(jobType + ".name"),
+                    plugin.formatComponent(jobType + ".name").append(Component.text(" " + level)),
                     from,
                     BossBar.Color.valueOf(plugin.getConfig().getString(jobType + ".bar-color")),
                     BossBar.Overlay.NOTCHED_10
@@ -184,6 +186,9 @@ public class ExperienceManager {
                 BOSS_BAR_TIMEOUT
         );
 
+        if (expBar.level != level) {
+            expBar.bossBar.name(plugin.formatComponent(jobType + ".name").append(Component.text(" " + level)));
+        }
         expBar.bossBar.progress(to);
     }
 

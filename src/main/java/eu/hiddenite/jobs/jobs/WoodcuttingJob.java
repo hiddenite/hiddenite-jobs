@@ -2,9 +2,8 @@ package eu.hiddenite.jobs.jobs;
 
 import eu.hiddenite.jobs.JobsPlugin;
 import eu.hiddenite.jobs.helpers.BlockPosition;
-import eu.hiddenite.jobs.skills.CalculatorSkill;
-import eu.hiddenite.jobs.skills.CarefulSkill;
-import eu.hiddenite.jobs.skills.GathererSkill;
+import eu.hiddenite.jobs.helpers.MaterialTypes;
+import eu.hiddenite.jobs.skills.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -13,29 +12,54 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class WoodcuttingManager implements Listener {
+public class WoodcuttingJob extends Job implements Listener {
     public static final String JOB_TYPE = "woodcutting";
 
     private final JobsPlugin plugin;
     private final HashMap<Material, Integer> expPerMaterial = new HashMap<>();
     private final HashMap<UUID, Long> skillCooldown = new HashMap<>();
+    private final HashSet<UUID> defoliatedRecently = new HashSet<>();
+
+    private final CarefulSkill careful = new CarefulSkill(1, MaterialTypes.AXES);
+    private final GathererSkill gatherer = new GathererSkill(5, MaterialTypes.LOGS);
+    private final CalculatorSkill calculator1 = new CalculatorSkill(30, 1);
+    private final DefoliatorSkill defoliator = new DefoliatorSkill(40);
+    private final CalculatorSkill calculator2 = new CalculatorSkill(60, 2);
+    private final CalculatorSkill calculator3 = new CalculatorSkill(90, 3);
+
+    private final List<Skill> skills = new ArrayList<>(Arrays.asList(
+            careful,
+            gatherer,
+            calculator1,
+            defoliator,
+            calculator2,
+            calculator3
+    ));
 
     private BlockPosition lastBrokenBlock = null;
 
-    public WoodcuttingManager(JobsPlugin plugin) {
+    public WoodcuttingJob(JobsPlugin plugin) {
         this.plugin = plugin;
 
         loadMaterials();
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    public String getType() {
+        return JOB_TYPE;
+    }
+
+    @Override
+    public List<Skill> getSkills() {
+        return skills;
     }
 
     private void loadMaterials() {
@@ -48,13 +72,6 @@ public class WoodcuttingManager implements Listener {
 
         expPerMaterial.put(Material.CRIMSON_STEM, 20);
         expPerMaterial.put(Material.WARPED_STEM, 20);
-
-        expPerMaterial.put(Material.ACACIA_LEAVES, 1);
-        expPerMaterial.put(Material.BIRCH_LEAVES, 1);
-        expPerMaterial.put(Material.DARK_OAK_LEAVES, 1);
-        expPerMaterial.put(Material.JUNGLE_LEAVES, 1);
-        expPerMaterial.put(Material.OAK_LEAVES, 1);
-        expPerMaterial.put(Material.SPRUCE_LEAVES, 1);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -91,23 +108,28 @@ public class WoodcuttingManager implements Listener {
             return false;
         }
 
-        int requiredRank = CalculatorSkill.getRequiredRankForTreeSize(tree.size());
-        if (requiredRank == -1) {
-            return false;
+        CalculatorSkill skill = null;
+        if (calculator1.isValidTreeSize(tree.size())) {
+            skill = calculator1;
+        }
+        if (calculator2.isValidTreeSize(tree.size())) {
+            skill = calculator2;
+        }
+        if (calculator3.isValidTreeSize(tree.size())) {
+            skill = calculator3;
         }
 
-        int requiredLevel = CalculatorSkill.getRequiredLevelForRank(requiredRank);
-        if (level < requiredLevel) {
+        if (skill == null || level < skill.getRequiredLevel()) {
             return false;
         }
 
         event.setCancelled(true);
-        skillCooldown.put(player.getUniqueId(), now + CalculatorSkill.getCooldown(level, requiredRank) * 1000);
+        skillCooldown.put(player.getUniqueId(), now + skill.getCooldown(level) * 1000);
 
         plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, expPerBlock * tree.size());
         for (Block block : tree) {
             for (ItemStack drop : block.getDrops(event.getPlayer().getInventory().getItemInMainHand())) {
-                GathererSkill.apply(drop, level);
+                gatherer.apply(drop, level);
                 block.getWorld().dropItemNaturally(block.getLocation().toCenterLocation(), drop);
             }
             block.setType(Material.AIR);
@@ -123,7 +145,7 @@ public class WoodcuttingManager implements Listener {
 
         int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
         for (Item item : event.getItems()) {
-            GathererSkill.apply(item.getItemStack(), level);
+            gatherer.apply(item.getItemStack(), level);
         }
     }
 
@@ -131,8 +153,27 @@ public class WoodcuttingManager implements Listener {
     public void onPlayerItemDamage(PlayerItemDamageEvent event) {
         int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
 
-        if (CarefulSkill.shouldApply(event.getItem(), level, JOB_TYPE)) {
+        if (defoliatedRecently.remove(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
+            return;
+        }
+
+        if (careful.shouldApply(event.getItem(), level)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockDamage(BlockDamageEvent event) {
+        if (!plugin.getNaturalBlocksManager().isNatural(event.getBlock())) {
+            return;
+        }
+
+        int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
+
+        if (defoliator.shouldApply(event.getBlock(), event.getItemInHand(), level)) {
+            event.setInstaBreak(true);
+            defoliatedRecently.add(event.getPlayer().getUniqueId());
         }
     }
 }

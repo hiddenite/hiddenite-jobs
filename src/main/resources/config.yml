@@ -107,20 +107,16 @@ fishing:
       icon: "CLOCK"
       description: "§bReduce the wait time by §a{BONUS}%§b.\n§7Improves with your level."
 
-hunter:
-  name: "§cHunter"
+hunting:
+  name: "§cHunting"
   bar-color: "RED"
   icon: "IRON_SWORD"
   skills:
     careful:
       name: "§6Careful"
-      icon: "FISHING_ROD"
-      description: "§bYour fishing rods break §a{BONUS}%§b slower.\n§7Increases with your level."
-    gatherer:
-      name: "§6Gatherer"
-      icon: "COD"
-      description: "§a{BONUS}%§b chance to catch two fish.\n§7Increases with your level."
-    impatient:
-      name: "§6Impatient"
-      icon: "CLOCK"
-      description: "§bReduce the wait time by §a{BONUS}%§b.\n§7Improves with your level."
+      icon: "GOLDEN_SWORD"
+      description: "§bYour swords and bows break §a{BONUS}%§b slower.\n§7Increases with your level."
+    egg-drop:
+      name: "§6Egg hunter"
+      icon: "SHEEP_SPAWN_EGG"
+      description: "§b§a{BONUS}%§b chance to drop animal eggs.\n§7Increases with your level."

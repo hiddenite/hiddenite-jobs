@@ -32,7 +32,7 @@ public class JobsPlugin extends JavaPlugin {
     private List<Job> jobs = new ArrayList<>();
     public List<Job> getJobs() {
         return jobs;
-    };
+    }
 
     private JobsMenuManager jobsMenuManager;
 
@@ -54,6 +54,7 @@ public class JobsPlugin extends JavaPlugin {
                 new WoodcuttingJob(this),
                 new MiningJob(this),
                 new FarmingJob(this),
+                new HuntingJob(this),
                 new FishingJob(this)
         ));
     }

@@ -32,6 +32,19 @@ public class MaterialTypes {
             Material.NETHERITE_PICKAXE
     ));
 
+    public static final HashSet<Material> SWORDS = new HashSet<>(Arrays.asList(
+            Material.WOODEN_SWORD,
+            Material.STONE_SWORD,
+            Material.IRON_SWORD,
+            Material.GOLDEN_SWORD,
+            Material.DIAMOND_SWORD,
+            Material.NETHERITE_SWORD
+    ));
+
+    public static final HashSet<Material> BOWS = new HashSet<>(Collections.singletonList(
+            Material.BOW
+    ));
+
     public static final HashSet<Material> HOES = new HashSet<>(Arrays.asList(
             Material.WOODEN_HOE,
             Material.STONE_HOE,

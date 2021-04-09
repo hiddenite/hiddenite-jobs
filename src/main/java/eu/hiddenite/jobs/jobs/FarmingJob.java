@@ -69,7 +69,7 @@ public class FarmingJob extends Job implements Listener {
             if (MaterialTypes.FLOWERS.contains(event.getBlock().getType())) {
                 plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, 5);
                 lastBrokenBlock = new BlockPosition(event.getBlock());
-            } else if (event.getBlock().getType() == Material.GRASS) {
+            } else if (MaterialTypes.GRASS.contains(event.getBlock().getType())) {
                 plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, 1);
                 lastBrokenBlock = new BlockPosition(event.getBlock());
             }

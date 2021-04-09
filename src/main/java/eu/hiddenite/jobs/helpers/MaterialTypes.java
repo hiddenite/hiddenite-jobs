@@ -110,7 +110,7 @@ public class MaterialTypes {
             Material.BEETROOT_SEEDS
     ));
 
-    public static final HashSet<Material> FLOWERS = new HashSet<>((Arrays.asList(
+    public static final HashSet<Material> FLOWERS = new HashSet<>(Arrays.asList(
             Material.DANDELION,
             Material.POPPY,
             Material.BLUE_ORCHID,
@@ -124,6 +124,14 @@ public class MaterialTypes {
             Material.LILY_OF_THE_VALLEY,
             Material.SUNFLOWER,
             Material.LILAC,
-            Material.PEONY
-    )));
+            Material.PEONY,
+            Material.ROSE_BUSH
+    ));
+
+    public static final HashSet<Material> GRASS = new HashSet<>(Arrays.asList(
+            Material.GRASS,
+            Material.TALL_GRASS,
+            Material.FERN,
+            Material.LARGE_FERN
+    ));
 }

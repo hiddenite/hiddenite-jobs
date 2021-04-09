@@ -17,6 +17,10 @@ public abstract class Skill {
         return 0.0;
     }
 
+    public double getTime(int level) {
+        return 0.0;
+    }
+
     public int getRequiredLevel() {
         return requiredLevel;
     }

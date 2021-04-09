@@ -3,16 +3,16 @@ package eu.hiddenite.jobs.jobs;
 import eu.hiddenite.jobs.JobsPlugin;
 import eu.hiddenite.jobs.helpers.BlockPosition;
 import eu.hiddenite.jobs.helpers.MaterialTypes;
-import eu.hiddenite.jobs.skills.CarefulSkill;
-import eu.hiddenite.jobs.skills.GathererSkill;
-import eu.hiddenite.jobs.skills.Skill;
+import eu.hiddenite.jobs.skills.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
 import java.util.ArrayList;
@@ -28,10 +28,16 @@ public class MiningJob extends Job implements Listener {
 
     private final CarefulSkill careful = new CarefulSkill(1, MaterialTypes.PICKAXES);
     private final GathererSkill gatherer = new GathererSkill(5, MaterialTypes.ORES);
+    private final LavaSmeltSkill lavaSmelt = new LavaSmeltSkill(20);
+    private final InspirationSkill inspiration = new InspirationSkill(30);
+    private final LavaResistanceSkill lavaResistance = new LavaResistanceSkill(40);
 
     private final List<Skill> skills = new ArrayList<>(Arrays.asList(
             careful,
-            gatherer
+            gatherer,
+            lavaSmelt,
+            inspiration,
+            lavaResistance
     ));
 
     private BlockPosition lastBrokenBlock = null;
@@ -81,6 +87,9 @@ public class MiningJob extends Job implements Listener {
 
         plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, expPerBlock);
         lastBrokenBlock = new BlockPosition(event.getBlock());
+
+        int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
+        inspiration.apply(event.getPlayer(), level);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -92,6 +101,7 @@ public class MiningJob extends Job implements Listener {
         int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
         for (Item item : event.getItems()) {
             gatherer.apply(item.getItemStack(), level);
+            lavaSmelt.apply(event.getPlayer().getInventory(), item.getItemStack(), level);
         }
     }
 
@@ -102,5 +112,19 @@ public class MiningJob extends Job implements Listener {
         if (careful.shouldApply(event.getItem(), level)) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.LAVA) {
+            return;
+        }
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player)event.getEntity();
+        int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
+        lavaResistance.apply(player, level);
     }
 }

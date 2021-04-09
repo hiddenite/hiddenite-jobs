@@ -134,6 +134,7 @@ public class JobsMenuManager implements Listener {
         int level = plugin.getExperienceManager().getPlayerLevel(player, jobType);
         int requiredLevel = skill.getRequiredLevel();
         double bonus = skill.getBonus(level);
+        double time = skill.getTime(level);
         int cooldown = skill.getCooldown(level);
 
         Material itemType = Material.valueOf(plugin.getConfig().getString(jobType + ".skills." + skill.getType() + ".icon"));
@@ -148,6 +149,7 @@ public class JobsMenuManager implements Listener {
         } else {
             meta.lore(plugin.formatComponents(jobType + ".skills." + skill.getType() + ".description",
                     "{BONUS}", bonusDecimalFormat.format(bonus * 100),
+                    "{TIME}", bonusDecimalFormat.format(time),
                     "{COOLDOWN}", cooldown));
         }
 

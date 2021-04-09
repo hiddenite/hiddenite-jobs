@@ -57,6 +57,18 @@ mining:
       name: "§6Gatherer"
       icon: "IRON_ORE"
       description: "§a{BONUS}%§b chance to double your ores.\n§7Increases with your level."
+    lava-smelt:
+      name: "§6Lava smelting"
+      icon: "LAVA_BUCKET"
+      description: "§bSmelt iron and gold ores instantly\n§b if you have a §abucket of lava\n§b in your inventory."
+    inspiration:
+      name: "§6Inspiration"
+      icon: "REDSTONE_TORCH"
+      description: "§bHaste during §a{TIME}§b seconds\n §bafter mining an ore.\n§7Duration increases with your level."
+    lava-resistance:
+      name: "§6Heat resistance"
+      icon: "FIRE_CHARGE"
+      description: "§bFire resistance during §a{TIME}§b seconds\n §bwhen touching lava.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Duration increases with your level.\n§7Cooldown decreases with your level."
 
 farming:
   name: "§aFarming"

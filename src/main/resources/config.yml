@@ -4,6 +4,8 @@ mysql:
   password: ""
   database: "my_server"
 
+language: "en"
+
 messages:
   levelup: "§bYou are now level §a{LEVEL}§b in {JOB}§b."
 
@@ -87,6 +89,10 @@ farming:
       name: "§6As a feather"
       icon: "FEATHER"
       description: "§bJumping on §acrops§b no longer\n§bbreak them."
+    negate-damage:
+      name: "§6Cactus tamer"
+      icon: "CACTUS"
+      description: "§bPlants like §acactus§b no longer\n§bdamage you."
 
 fishing:
   name: "§3Fishing"
@@ -119,4 +125,25 @@ hunting:
     egg-drop:
       name: "§6Egg hunter"
       icon: "SHEEP_SPAWN_EGG"
-      description: "§b§a{BONUS}%§b chance to drop animal eggs.\n§7Increases with your level."
+      description: "§a{BONUS}%§b chance to drop animal eggs.\n§7Increases with your level."
+    fall-damage:
+      name: "§6Smooth fall"
+      icon: "FEATHER"
+      description: "§bReduce fall damage by §a{BONUS}%§b.\n§7Increases with your level."
+    mine-spawner:
+      name: "§6Spawner miner"
+      icon: "SPAWNER"
+      description: "§bYou can loot the spawners you break."
+    inspiration:
+      name: "§6Inspiration"
+      icon: "REDSTONE_TORCH"
+      description: "§bStrength during §a{TIME}§b seconds\n §bafter killing a mob.\n§7Duration increases with your level."
+    explosion-survivor:
+      name: "§6Explosion survivor"
+      icon: "TNT"
+      description: "§bSurvive an explosion that would kill you.\n§bCooldown: §a{COOLDOWN}§b seconds\n§7Cooldown decreases with your level."
+
+enchanting:
+  name: "§cEnchanting"
+  bar-color: "PURPLE"
+  icon: "BOOK"

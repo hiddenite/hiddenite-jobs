@@ -22,7 +22,7 @@ public class GathererSkill extends Skill {
 
     @Override
     public double getBonus(int level) {
-        return (double)Math.min(100, level) / 100.0;
+        return (double)Math.min(100, level) / 125.0;
     }
 
     public void apply(ItemStack item, int level) {

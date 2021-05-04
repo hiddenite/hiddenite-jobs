@@ -6,7 +6,9 @@ import eu.hiddenite.jobs.helpers.MaterialTypes;
 import eu.hiddenite.jobs.skills.*;
 import org.bukkit.Material;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,10 +16,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,12 +34,14 @@ public class FarmingJob extends Job implements Listener {
     private final CarefulSkill careful = new CarefulSkill(1, MaterialTypes.HOES);
     private final GathererSkill gatherer = new GathererSkill(5, MaterialTypes.merge(MaterialTypes.CROP_ITEMS, MaterialTypes.FLOWERS));
     private final CropsFeatherSkill cropsFeather = new CropsFeatherSkill(30);
+    private final NegateDamageSkill negateCactusSkill = new NegateDamageSkill(60, EntityDamageEvent.DamageCause.CONTACT);
 
-    private final List<Skill> skills = new ArrayList<>(Arrays.asList(
+    private final List<Skill> skills = Arrays.asList(
             careful,
             gatherer,
-            cropsFeather
-    ));
+            cropsFeather,
+            negateCactusSkill
+    );
 
     public FarmingJob(JobsPlugin plugin) {
         this.plugin = plugin;
@@ -59,7 +64,7 @@ public class FarmingJob extends Job implements Listener {
         if (MaterialTypes.CROP_TILES.contains(event.getBlock().getType())) {
             Ageable ageable = (Ageable)event.getBlock().getBlockData();
             if (ageable.getAge() == ageable.getMaximumAge()) {
-                plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, event.getBlock().getType() == Material.WHEAT ? 15 : 10);
+                plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, event.getBlock().getType() == Material.WHEAT ? 10 : 5);
                 lastBrokenBlock = new BlockPosition(event.getBlock());
             }
             return;
@@ -114,5 +119,17 @@ public class FarmingJob extends Job implements Listener {
         if (careful.shouldApply(event.getItem(), level)) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDamageByEntity(EntityDamageByBlockEvent event) {
+        if (!event.getEntity().getType().equals(EntityType.PLAYER)) {
+            return;
+        }
+
+        Player player = (Player)event.getEntity();
+        int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
+
+        negateCactusSkill.handleEvent(event, level);
     }
 }

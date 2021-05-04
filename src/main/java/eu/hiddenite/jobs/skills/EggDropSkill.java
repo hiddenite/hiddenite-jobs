@@ -42,6 +42,7 @@ public class EggDropSkill extends Skill {
         eggFromEntity.put(EntityType.LLAMA, Material.LLAMA_SPAWN_EGG);
         eggFromEntity.put(EntityType.PANDA, Material.PANDA_SPAWN_EGG);
         eggFromEntity.put(EntityType.WOLF, Material.WOLF_SPAWN_EGG);
+        eggFromEntity.put(EntityType.POLAR_BEAR, Material.POLAR_BEAR_SPAWN_EGG);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class EggDropSkill extends Skill {
 
     @Override
     public double getBonus(int level) {
-        return (double)Math.min(100, level) / 1000.0;
+        return (double)Math.min(100, level) / 2000.0;
     }
 
     public void apply(EntityDeathEvent event, int level) {

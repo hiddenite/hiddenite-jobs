@@ -104,7 +104,7 @@ public class FishingJob extends Job implements Listener {
 
     private void applyExpAndBuffs(Player player, FishHook hook, ItemStack itemStack) {
         int enchants = itemStack.getEnchantments().size();
-        int exp = (hook.isInOpenWater() ? 20 : 5) + (enchants * 5);
+        int exp = (hook.isInOpenWater() ? 15 : 5) + (enchants * 5);
 
         int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
         gatherer.apply(itemStack, level);

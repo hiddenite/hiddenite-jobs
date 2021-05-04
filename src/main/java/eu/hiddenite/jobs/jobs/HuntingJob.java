@@ -2,16 +2,21 @@ package eu.hiddenite.jobs.jobs;
 
 import eu.hiddenite.jobs.JobsPlugin;
 import eu.hiddenite.jobs.helpers.MaterialTypes;
-import eu.hiddenite.jobs.skills.CarefulSkill;
-import eu.hiddenite.jobs.skills.EggDropSkill;
-import eu.hiddenite.jobs.skills.Skill;
+import eu.hiddenite.jobs.skills.*;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,10 +32,19 @@ public class HuntingJob extends Job implements Listener {
     private final CarefulSkill careful = new CarefulSkill(1,
             MaterialTypes.merge(MaterialTypes.SWORDS, MaterialTypes.BOWS));
     private final EggDropSkill eggDrop = new EggDropSkill(10);
+    private final FallDamageSkill fallDamage = new FallDamageSkill(30);
+    private final MineSpawnerSkill mineSpawner = new MineSpawnerSkill(50);
+    private final InspirationSkill inspiration = new InspirationSkill(60,
+            PotionEffectType.INCREASE_DAMAGE, 0);
+    private final ExplosionSurvivorSkill explosionSurvivor = new ExplosionSurvivorSkill(70);
 
     private final List<Skill> skills = new ArrayList<>(Arrays.asList(
             careful,
-            eggDrop
+            eggDrop,
+            fallDamage,
+            mineSpawner,
+            inspiration,
+            explosionSurvivor
     ));
 
     public HuntingJob(JobsPlugin plugin) {
@@ -40,24 +54,24 @@ public class HuntingJob extends Job implements Listener {
 
         // Passive mobs
         expPerEntity.put(EntityType.BAT, 1);
-        expPerEntity.put(EntityType.CAT, 0);
+        expPerEntity.put(EntityType.CAT, 1);
         expPerEntity.put(EntityType.CHICKEN, 5);
-        expPerEntity.put(EntityType.COD, 0);
+        expPerEntity.put(EntityType.COD, 1);
         expPerEntity.put(EntityType.COW, 5);
         expPerEntity.put(EntityType.DONKEY, 5);
         expPerEntity.put(EntityType.FOX, 10);
-        expPerEntity.put(EntityType.HORSE, 0);
+        expPerEntity.put(EntityType.HORSE, 1);
         expPerEntity.put(EntityType.MUSHROOM_COW, 10);
         expPerEntity.put(EntityType.MULE, 0);
-        expPerEntity.put(EntityType.OCELOT, 0);
-        expPerEntity.put(EntityType.PARROT, 0);
+        expPerEntity.put(EntityType.OCELOT, 1);
+        expPerEntity.put(EntityType.PARROT, 1);
         expPerEntity.put(EntityType.PIG, 5);
         expPerEntity.put(EntityType.PUFFERFISH, 0);
         expPerEntity.put(EntityType.RABBIT, 5);
-        expPerEntity.put(EntityType.SALMON, 0);
+        expPerEntity.put(EntityType.SALMON, 1);
         expPerEntity.put(EntityType.SHEEP, 5);
         expPerEntity.put(EntityType.SKELETON_HORSE, 0);
-        expPerEntity.put(EntityType.SNOWMAN, 0);
+        expPerEntity.put(EntityType.SNOWMAN, 1);
         expPerEntity.put(EntityType.SQUID, 5);
         expPerEntity.put(EntityType.STRIDER, 10);
         expPerEntity.put(EntityType.TROPICAL_FISH, 0);
@@ -67,7 +81,7 @@ public class HuntingJob extends Job implements Listener {
         expPerEntity.put(EntityType.BEE, 5);
         expPerEntity.put(EntityType.CAVE_SPIDER, 30);
         expPerEntity.put(EntityType.DOLPHIN, 5);
-        expPerEntity.put(EntityType.ENDERMAN, 10);
+        expPerEntity.put(EntityType.ENDERMAN, 25);
         expPerEntity.put(EntityType.IRON_GOLEM, 15);
         expPerEntity.put(EntityType.LLAMA, 5);
         expPerEntity.put(EntityType.PIGLIN, 10);
@@ -135,13 +149,57 @@ public class HuntingJob extends Job implements Listener {
         Player player = event.getEntity().getKiller();
 
         int exp = expPerEntity.getOrDefault(event.getEntityType(), 0);
-        if (exp == 0) {
-            return;
+        if (event.getEntityType() == EntityType.ENDERMAN && player.getWorld().getEnvironment() == World.Environment.THE_END) {
+            exp = 3;
         }
 
         int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
         eggDrop.apply(event, level);
 
+        if (exp == 0) {
+            return;
+        }
+
+        inspiration.apply(player, level);
         plugin.getExperienceManager().gainExp(player, JOB_TYPE, exp);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getBlock().getType().equals(Material.SPAWNER)) {
+            int level = plugin.getExperienceManager().getPlayerLevel(event.getPlayer(), JOB_TYPE);
+            mineSpawner.handleBreak(event, level);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getBlockPlaced().getType().equals(Material.SPAWNER)) {
+            mineSpawner.handlePlace(event);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity().getType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player player = (Player)event.getEntity();
+        int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
+
+        fallDamage.handleEvent(event, level);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getEntity().getType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player player = (Player)event.getEntity();
+        int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
+
+        explosionSurvivor.handleEvent(event, level);
     }
 }

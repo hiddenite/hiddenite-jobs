@@ -63,15 +63,15 @@ public class WoodcuttingJob extends Job implements Listener {
     }
 
     private void loadMaterials() {
-        expPerMaterial.put(Material.ACACIA_LOG, 10);
-        expPerMaterial.put(Material.BIRCH_LOG, 10);
-        expPerMaterial.put(Material.DARK_OAK_LOG, 10);
-        expPerMaterial.put(Material.JUNGLE_LOG, 10);
-        expPerMaterial.put(Material.OAK_LOG, 10);
-        expPerMaterial.put(Material.SPRUCE_LOG, 10);
+        expPerMaterial.put(Material.ACACIA_LOG, 5);
+        expPerMaterial.put(Material.BIRCH_LOG, 5);
+        expPerMaterial.put(Material.DARK_OAK_LOG, 5);
+        expPerMaterial.put(Material.JUNGLE_LOG, 5);
+        expPerMaterial.put(Material.OAK_LOG, 5);
+        expPerMaterial.put(Material.SPRUCE_LOG, 5);
 
-        expPerMaterial.put(Material.CRIMSON_STEM, 20);
-        expPerMaterial.put(Material.WARPED_STEM, 20);
+        expPerMaterial.put(Material.CRIMSON_STEM, 10);
+        expPerMaterial.put(Material.WARPED_STEM, 10);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -124,7 +124,7 @@ public class WoodcuttingJob extends Job implements Listener {
         }
 
         event.setCancelled(true);
-        skillCooldown.put(player.getUniqueId(), now + skill.getCooldown(level) * 1000);
+        skillCooldown.put(player.getUniqueId(), now + skill.getCooldown(level) * 1000L);
 
         plugin.getExperienceManager().gainExp(event.getPlayer(), JOB_TYPE, expPerBlock * tree.size());
         for (Block block : tree) {

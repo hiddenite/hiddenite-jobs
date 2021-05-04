@@ -1,0 +1,103 @@
+messages:
+  levelup: "§bVous êtes maintenant un §a{JOB}§b de niveau §a{LEVEL}§b !"
+
+menu:
+  title: "Métiers"
+  job-lore: "§bNiveau §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp\n§7Cliquez pour voir les compétences"
+  job-lore-selected: "§bNiveau §a{LEVEL}\n§a{CURRENT_EXP} / {TARGET_EXP}§b exp"
+  hidden-skill:
+    description: "§cNécessite le niveau §6{LEVEL}"
+
+woodcutting:
+  name: "§2Bûcheron"
+  skills:
+    careful:
+      name: "§6Soigneux"
+      description: "§bLes haches s'usent §a{BONUS} %§b moins vite.\n§7Ce bonus augmente avec le niveau."
+    gatherer:
+      name: "§6Récolteur"
+      description: "§a{BONUS} %§b de chance de doubler les bûches.\n§7Ce bonus augmente avec le niveau."
+    defoliator:
+      name: "§6Défoliateur"
+      description: "§bLes haches cassent les §afeuilles\n§a naturelles §binstantanément.\n§bLes §afeuilles §bn'abîment plus les haches."
+    calculator1:
+      name: "§6Calculateur I"
+      description: "§bAbat les petits arbres d'un seul coup.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."
+    calculator2:
+      name: "§6Calculateur II"
+      description: "§bAbat les arbres moyens d'un seul coup.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."
+    calculator3:
+      name: "§6Calculateur III"
+      description: "§bAbat les gros arbres d'un seul coup.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."
+
+mining:
+  name: "§7Mineur"
+  skills:
+    careful:
+      name: "§6Soigneux"
+      description: "§bLes pioches s'usent §a{BONUS} %§b moins vite.\n§7Ce bonus augmente avec le niveau."
+    gatherer:
+      name: "§6Récolteur"
+      description: "§a{BONUS} %§b de chance de doubler les minerais.\n§7Ce bonus augmente avec le niveau."
+    lava-smelt:
+      name: "§6Lave en fusion"
+      description: "§bFond l'or et le fer automatiquement\n§b si vous avez un §aseau de lave\n§b dans votre inventaire."
+    inspiration:
+      name: "§6Inspiration"
+      description: "§bHaste pendant §a{TIME}§b secondes\n §baprès chaque minerai.\n§7La durée augmente avec le niveau."
+    lava-resistance:
+      name: "§6Habitué au feu"
+      description: "§bRésistance au feu pendant §a{TIME}§b secondes\n §bau contact de la lave.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7La durée augmente avec le niveau.\n§7Le cooldown baisse avec le niveau."
+
+farming:
+  name: "§aJardinier"
+  skills:
+    careful:
+      name: "§6Soigneux"
+      description: "§bLes houes s'usent §a{BONUS} %§b moins vite.\n§7Ce bonus augmente avec le niveau."
+    gatherer:
+      name: "§6Récolteur"
+      description: "§a{BONUS} %§b de chance de doubler les récoltes.\n§7Ce bonus augmente avec le niveau."
+    crops-feather:
+      name: "§6Comme sur des oeufs"
+      description: "§bSauter sur les §aplantations\n§b ne les casse pas."
+    negate-damage:
+      name: "§6Dompteur de cactus"
+      icon: "CACTUS"
+      description: "§bLes plantes comme le §acactus§b\n§b ne font plus de dégâts."
+
+fishing:
+  name: "§3Pêcheur"
+  hint-deep-water: "§bPêchez en §3eau profonde§b pour plus de butin et d'expérience !"
+  skills:
+    careful:
+      name: "§6Soigneux"
+      description: "§bVotre canne à pêche s'use §a{BONUS} %§b moins vite.\n§7Ce bonus augmente avec le niveau."
+    gatherer:
+      name: "§6Récolteur"
+      description: "§a{BONUS} %§b de chance de doubler votre prise.\n§7Ce bonus augmente avec le niveau."
+    impatient:
+      name: "§6Impatient"
+      description: "§bRéduit le temps d'attente de §a{BONUS} %§b.\n§7S'améliore avec le niveau."
+
+hunting:
+  name: "§cChasseur"
+  skills:
+    careful:
+      name: "§6Soigneux"
+      description: "§bLes arcs et épées s'usent §a{BONUS} %§b moins vite.\n§7Ce bonus augmente avec le niveau."
+    egg-drop:
+      name: "§6Chasse à l'oeuf"
+      description: "§b§a{BONUS} %§b de chance de drop un oeuf\n§b en tuant un animal.\n§7Augmente avec le niveau."
+    fall-damage:
+      name: "§6Chute en douceur"
+      description: "§bRéduit les dégâts de chute de §a{BONUS} %§b.\n§7Augmente avec le niveau."
+    mine-spawner:
+      name: "§6Chasse au spawner"
+      description: "§bVous récupérez les spawners que\n§b vous cassez."
+    inspiration:
+      name: "§6Inspiration"
+      description: "§bForce pendant §a{TIME}§b secondes\n §baprès avoir tué un mob.\n§7La durée augmente avec le niveau."
+    explosion-survivor:
+      name: "§6Survie explosive"
+      description: "§bPermet de survivre à une explosion\n §bqui aurait dû tuer.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."

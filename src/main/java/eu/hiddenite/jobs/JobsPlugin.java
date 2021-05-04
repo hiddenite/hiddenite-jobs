@@ -4,9 +4,13 @@ import eu.hiddenite.jobs.jobs.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,9 +40,12 @@ public class JobsPlugin extends JavaPlugin {
 
     private JobsMenuManager jobsMenuManager;
 
+    private YamlConfiguration translationConfig;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        loadTranslations();
 
         database = new Database(getConfig(), getLogger());
         if (!database.open()) {
@@ -56,6 +63,7 @@ public class JobsPlugin extends JavaPlugin {
                 new FarmingJob(this),
                 new HuntingJob(this),
                 new FishingJob(this)
+                // new EnchantingJob(this)
         ));
     }
 
@@ -70,8 +78,29 @@ public class JobsPlugin extends JavaPlugin {
         database.close();
     }
 
+    private void loadTranslations() {
+        String localeFilename = "messages_" + getConfig().getString("language") + ".yml";
+        try (InputStream stream = getResource(localeFilename)) {
+            if (stream != null) {
+                try (InputStreamReader reader = new InputStreamReader(stream)) {
+                    translationConfig = YamlConfiguration.loadConfiguration(reader);
+                    getLogger().info("Loaded internal translation file: " + localeFilename);
+                }
+            } else {
+                getLogger().warning("Missing internal translation file: " + localeFilename);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getMessage(String configPath) {
-        return Objects.toString(getConfig().getString(configPath), "");
+        String defaultValue = Objects.toString(getConfig().getString(configPath), "");
+        if (translationConfig != null) {
+            return translationConfig.getString(configPath, defaultValue);
+        } else {
+            return defaultValue;
+        }
     }
 
     public String formatMessage(String key, Object... parameters) {

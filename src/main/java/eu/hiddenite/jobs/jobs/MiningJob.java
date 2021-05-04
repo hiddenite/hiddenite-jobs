@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +30,8 @@ public class MiningJob extends Job implements Listener {
     private final CarefulSkill careful = new CarefulSkill(1, MaterialTypes.PICKAXES);
     private final GathererSkill gatherer = new GathererSkill(5, MaterialTypes.ORES);
     private final LavaSmeltSkill lavaSmelt = new LavaSmeltSkill(20);
-    private final InspirationSkill inspiration = new InspirationSkill(30);
+    private final InspirationSkill inspiration = new InspirationSkill(30,
+            PotionEffectType.FAST_DIGGING, 1);
     private final LavaResistanceSkill lavaResistance = new LavaResistanceSkill(40);
 
     private final List<Skill> skills = new ArrayList<>(Arrays.asList(
@@ -61,17 +63,17 @@ public class MiningJob extends Job implements Listener {
     }
 
     private void loadMaterials() {
-        expPerMaterial.put(Material.COAL_ORE, 10);
-        expPerMaterial.put(Material.IRON_ORE, 15);
-        expPerMaterial.put(Material.REDSTONE_ORE, 15);
-        expPerMaterial.put(Material.LAPIS_ORE, 20);
-        expPerMaterial.put(Material.GOLD_ORE, 30);
-        expPerMaterial.put(Material.DIAMOND_ORE, 60);
-        expPerMaterial.put(Material.EMERALD_ORE, 120);
+        expPerMaterial.put(Material.COAL_ORE, 3);
+        expPerMaterial.put(Material.IRON_ORE, 5);
+        expPerMaterial.put(Material.REDSTONE_ORE, 5);
+        expPerMaterial.put(Material.LAPIS_ORE, 10);
+        expPerMaterial.put(Material.GOLD_ORE, 10);
+        expPerMaterial.put(Material.DIAMOND_ORE, 30);
+        expPerMaterial.put(Material.EMERALD_ORE, 50);
 
-        expPerMaterial.put(Material.NETHER_GOLD_ORE, 20);
-        expPerMaterial.put(Material.NETHER_QUARTZ_ORE, 20);
-        expPerMaterial.put(Material.ANCIENT_DEBRIS, 200);
+        expPerMaterial.put(Material.NETHER_GOLD_ORE, 10);
+        expPerMaterial.put(Material.NETHER_QUARTZ_ORE, 8);
+        expPerMaterial.put(Material.ANCIENT_DEBRIS, 80);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)

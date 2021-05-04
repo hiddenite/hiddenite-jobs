@@ -4,12 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-public class LavaResistanceSkill extends Skill {
-    private final HashMap<UUID, Long> cooldown = new HashMap<>();
-
+public class LavaResistanceSkill extends CooldownSkill {
     public LavaResistanceSkill(int requiredLevel) {
         super(requiredLevel);
     }
@@ -34,13 +29,9 @@ public class LavaResistanceSkill extends Skill {
             return;
         }
 
-        long now = System.currentTimeMillis();
-        boolean isCooldownActive = cooldown.getOrDefault(player.getUniqueId(), 0L) > now;
-        if (isCooldownActive) {
+        if (!applyCooldown(player.getUniqueId(), level)) {
             return;
         }
-
-        cooldown.put(player.getUniqueId(), now + getCooldown(level) * 1000);
 
         int ticks = (int)Math.round(getTime(level) * 20.0);
         player.addPotionEffect(new PotionEffect(

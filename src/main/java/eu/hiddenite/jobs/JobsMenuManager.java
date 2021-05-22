@@ -8,10 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -50,6 +47,10 @@ public class JobsMenuManager implements Listener {
     }
 
     public void openMenu(Player player) {
+        if (player.getOpenInventory().getType() != InventoryType.CRAFTING && player.getOpenInventory().getType() != InventoryType.CREATIVE) {
+            plugin.getLogger().warning("Player " + player.getName() + " tried to open two inventories at once: " + player.getOpenInventory().getType());
+            return;
+        }
         InventoryMenu menu = new InventoryMenu();
         menu.player = player;
         menu.inventory = plugin.getServer().createInventory(player, 36, plugin.formatComponent("menu.title"));

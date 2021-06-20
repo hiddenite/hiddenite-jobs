@@ -43,6 +43,10 @@ public class EggDropSkill extends Skill {
         eggFromEntity.put(EntityType.PANDA, Material.PANDA_SPAWN_EGG);
         eggFromEntity.put(EntityType.WOLF, Material.WOLF_SPAWN_EGG);
         eggFromEntity.put(EntityType.POLAR_BEAR, Material.POLAR_BEAR_SPAWN_EGG);
+
+        eggFromEntity.put(EntityType.GLOW_SQUID, Material.GLOW_SQUID_SPAWN_EGG);
+        eggFromEntity.put(EntityType.AXOLOTL, Material.AXOLOTL_SPAWN_EGG);
+        eggFromEntity.put(EntityType.GOAT, Material.GOAT_SPAWN_EGG);
     }
 
     @Override

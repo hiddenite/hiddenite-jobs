@@ -64,6 +64,7 @@ public class MiningJob extends Job implements Listener {
 
     private void loadMaterials() {
         expPerMaterial.put(Material.COAL_ORE, 3);
+        expPerMaterial.put(Material.COPPER_ORE, 5);
         expPerMaterial.put(Material.IRON_ORE, 5);
         expPerMaterial.put(Material.REDSTONE_ORE, 5);
         expPerMaterial.put(Material.LAPIS_ORE, 10);
@@ -121,11 +122,10 @@ public class MiningJob extends Job implements Listener {
         if (event.getCause() != EntityDamageEvent.DamageCause.LAVA) {
             return;
         }
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        Player player = (Player)event.getEntity();
         int level = plugin.getExperienceManager().getPlayerLevel(player, JOB_TYPE);
         lavaResistance.apply(player, level);
     }

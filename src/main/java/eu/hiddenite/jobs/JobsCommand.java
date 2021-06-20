@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,23 +18,22 @@ public class JobsCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@Nonnull final CommandSender sender,
-                             @Nonnull final Command command,
-                             @Nonnull final String alias,
-                             @Nonnull final String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean onCommand(final @NotNull CommandSender sender,
+                             final @NotNull Command command,
+                             final @NotNull String alias,
+                             final String[] args) {
+        if (!(sender instanceof Player player)) {
             return true;
         }
-        Player player = (Player)sender;
         manager.openMenu(player);
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(@Nonnull final CommandSender sender,
-                                      @Nonnull final Command command,
-                                      @Nonnull final String alias,
-                                      @Nonnull final String[] args) {
+    public List<String> onTabComplete(final @NotNull CommandSender sender,
+                                      final @NotNull Command command,
+                                      final @NotNull String alias,
+                                      final String[] args) {
         return Collections.emptyList();
     }
 }

@@ -86,6 +86,7 @@ public class MaterialTypes {
             Material.GOLD_ORE,
             Material.DIAMOND_ORE,
             Material.EMERALD_ORE,
+            Material.COPPER_ORE,
 
             Material.COAL,
             Material.IRON_NUGGET,

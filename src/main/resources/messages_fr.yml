@@ -21,13 +21,13 @@ woodcutting:
       name: "§6Défoliateur"
       description: "§bLes haches cassent les §afeuilles\n§a naturelles §binstantanément.\n§bLes §afeuilles §bn'abîment plus les haches."
     calculator1:
-      name: "§6Calculateur I"
+      name: "§6Abattage I"
       description: "§bAbat les petits arbres d'un seul coup.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."
     calculator2:
-      name: "§6Calculateur II"
+      name: "§6Abattage II"
       description: "§bAbat les arbres moyens d'un seul coup.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."
     calculator3:
-      name: "§6Calculateur III"
+      name: "§6Abattage III"
       description: "§bAbat les gros arbres d'un seul coup.\n§bCooldown de §a{COOLDOWN}§b secondes.\n§7Le cooldown baisse avec le niveau."
 
 mining:

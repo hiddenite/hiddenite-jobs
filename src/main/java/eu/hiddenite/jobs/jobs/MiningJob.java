@@ -64,13 +64,21 @@ public class MiningJob extends Job implements Listener {
 
     private void loadMaterials() {
         expPerMaterial.put(Material.COAL_ORE, 3);
+        expPerMaterial.put(Material.DEEPSLATE_COAL_ORE, 3);
         expPerMaterial.put(Material.COPPER_ORE, 5);
+        expPerMaterial.put(Material.DEEPSLATE_COPPER_ORE, 5);
         expPerMaterial.put(Material.IRON_ORE, 5);
+        expPerMaterial.put(Material.DEEPSLATE_IRON_ORE, 5);
         expPerMaterial.put(Material.REDSTONE_ORE, 5);
+        expPerMaterial.put(Material.DEEPSLATE_REDSTONE_ORE, 5);
         expPerMaterial.put(Material.LAPIS_ORE, 10);
+        expPerMaterial.put(Material.DEEPSLATE_LAPIS_ORE, 10);
         expPerMaterial.put(Material.GOLD_ORE, 10);
+        expPerMaterial.put(Material.DEEPSLATE_GOLD_ORE, 10);
         expPerMaterial.put(Material.DIAMOND_ORE, 30);
+        expPerMaterial.put(Material.DEEPSLATE_DIAMOND_ORE, 30);
         expPerMaterial.put(Material.EMERALD_ORE, 50);
+        expPerMaterial.put(Material.DEEPSLATE_EMERALD_ORE, 50);
 
         expPerMaterial.put(Material.NETHER_GOLD_ORE, 10);
         expPerMaterial.put(Material.NETHER_QUARTZ_ORE, 8);

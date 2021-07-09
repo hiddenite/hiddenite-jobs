@@ -88,6 +88,15 @@ public class MaterialTypes {
             Material.EMERALD_ORE,
             Material.COPPER_ORE,
 
+            Material.DEEPSLATE_COAL_ORE,
+            Material.DEEPSLATE_IRON_ORE,
+            Material.DEEPSLATE_REDSTONE_ORE,
+            Material.DEEPSLATE_LAPIS_ORE,
+            Material.DEEPSLATE_GOLD_ORE,
+            Material.DEEPSLATE_DIAMOND_ORE,
+            Material.DEEPSLATE_EMERALD_ORE,
+            Material.DEEPSLATE_COPPER_ORE,
+
             Material.COAL,
             Material.IRON_NUGGET,
             Material.REDSTONE,
@@ -95,6 +104,8 @@ public class MaterialTypes {
             Material.GOLD_NUGGET,
             Material.DIAMOND,
             Material.EMERALD,
+            Material.RAW_GOLD,
+            Material.RAW_IRON,
 
             Material.NETHER_GOLD_ORE,
             Material.NETHER_QUARTZ_ORE,

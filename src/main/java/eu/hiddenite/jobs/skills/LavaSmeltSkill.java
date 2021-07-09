@@ -25,10 +25,10 @@ public class LavaSmeltSkill extends Skill {
         if (!inventory.contains(Material.LAVA_BUCKET)) {
             return;
         }
-        if (itemStack.getType().equals(Material.IRON_ORE)) {
+        if (itemStack.getType().equals(Material.RAW_IRON)) {
             itemStack.setType(Material.IRON_INGOT);
         }
-        if (itemStack.getType().equals(Material.GOLD_ORE)) {
+        if (itemStack.getType().equals(Material.RAW_GOLD)) {
             itemStack.setType(Material.GOLD_INGOT);
         }
     }
